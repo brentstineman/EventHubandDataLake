@@ -3,7 +3,22 @@
   <Profiles />
   <Settings>
     <Setting Name="eventHubName" Type="System.String" Scope="User">
-      <Value Profile="(Default)" />
+      <Value Profile="(Default)">&lt;eventHubName&gt;</Value>
+    </Setting>
+    <Setting Name="Access_Token" Type="System.String" Scope="User">
+      <Value Profile="(Default)">&lt;Access_Token&gt;</Value>
+    </Setting>
+    <Setting Name="Access_Token_Secret" Type="System.String" Scope="User">
+      <Value Profile="(Default)">&lt;Access_Token_Secret&gt;</Value>
+    </Setting>
+    <Setting Name="Consumer_Key" Type="System.String" Scope="User">
+      <Value Profile="(Default)">&lt;Consumer_Key&gt;</Value>
+    </Setting>
+    <Setting Name="Consumer_Secret" Type="System.String" Scope="User">
+      <Value Profile="(Default)">&lt;Consumer_Secret&gt;</Value>
+    </Setting>
+    <Setting Name="hashtag_filter" Type="System.String" Scope="User">
+      <Value Profile="(Default)">&lt;hashtag_filter&gt;</Value>
     </Setting>
   </Settings>
 </SettingsFile>

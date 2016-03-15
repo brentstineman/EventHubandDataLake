@@ -18,7 +18,7 @@ namespace ConsoleApplication1
         static void Main(string[] args)
         {
             
-            Auth.SetUserCredentials("Access_Token", "Access_Token_Secret", "Consumer_Key", "Consumer_Secret");
+            Auth.SetUserCredentials(ConfigurationManager.AppSettings["Access_Token"], ConfigurationManager.AppSettings["Access_Token_Secret"], ConfigurationManager.AppSettings["Consumer_Key"], ConfigurationManager.AppSettings["Consumer_Secret"]);
 
             var filteredStream = Stream.CreateFilteredStream();
             filteredStream.AddTrack("hashtagfilter");

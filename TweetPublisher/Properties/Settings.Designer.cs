@@ -25,13 +25,73 @@ namespace TweetPublisher.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        [global::System.Configuration.DefaultSettingValueAttribute("<eventHubName>")]
         public string eventHubName {
             get {
                 return ((string)(this["eventHubName"]));
             }
             set {
                 this["eventHubName"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("<Access_Token>")]
+        public string Access_Token {
+            get {
+                return ((string)(this["Access_Token"]));
+            }
+            set {
+                this["Access_Token"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("<Access_Token_Secret>")]
+        public string Access_Token_Secret {
+            get {
+                return ((string)(this["Access_Token_Secret"]));
+            }
+            set {
+                this["Access_Token_Secret"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("<Consumer_Key>")]
+        public string Consumer_Key {
+            get {
+                return ((string)(this["Consumer_Key"]));
+            }
+            set {
+                this["Consumer_Key"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("<Consumer_Secret>")]
+        public string Consumer_Secret {
+            get {
+                return ((string)(this["Consumer_Secret"]));
+            }
+            set {
+                this["Consumer_Secret"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("<hashtag_filter>")]
+        public string hashtag_filter {
+            get {
+                return ((string)(this["hashtag_filter"]));
+            }
+            set {
+                this["hashtag_filter"] = value;
             }
         }
     }
