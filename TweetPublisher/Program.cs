@@ -21,7 +21,7 @@ namespace ConsoleApplication1
             Auth.SetUserCredentials(ConfigurationManager.AppSettings["Access_Token"], ConfigurationManager.AppSettings["Access_Token_Secret"], ConfigurationManager.AppSettings["Consumer_Key"], ConfigurationManager.AppSettings["Consumer_Secret"]);
 
             var filteredStream = Stream.CreateFilteredStream();
-            filteredStream.AddTrack("hashtagfilter");
+            filteredStream.AddTrack(ConfigurationManager.AppSettings["hashtag_filter"]);
 
             filteredStream.MatchingTweetReceived += (sender, tweetArgs) => { 
                 Console.WriteLine(string.Format("{0} tweeted: {1}", tweetArgs.Tweet.CreatedBy.ScreenName, tweetArgs.Tweet.Text));
