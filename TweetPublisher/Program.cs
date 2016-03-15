@@ -10,6 +10,7 @@ using System.Threading.Tasks;
 using Tweetinvi;
 using Tweetinvi.Credentials;
 using System.Configuration;
+using Tweetinvi.Core.Credentials;
 
 namespace ConsoleApplication1
 {
@@ -17,24 +18,27 @@ namespace ConsoleApplication1
     {
         static void Main(string[] args)
         {
-            
-            Auth.SetUserCredentials(ConfigurationManager.AppSettings["Access_Token"], ConfigurationManager.AppSettings["Access_Token_Secret"], ConfigurationManager.AppSettings["Consumer_Key"], ConfigurationManager.AppSettings["Consumer_Secret"]);
+            Auth.SetUserCredentials(TweetPublisher.Properties.Settings.Default.Consumer_Key, TweetPublisher.Properties.Settings.Default.Consumer_Secret,
+                TweetPublisher.Properties.Settings.Default.Access_Token, TweetPublisher.Properties.Settings.Default.Access_Token_Secret);
 
             var filteredStream = Stream.CreateFilteredStream();
-            filteredStream.AddTrack(ConfigurationManager.AppSettings["hashtag_filter"]);
 
-            filteredStream.MatchingTweetReceived += (sender, tweetArgs) => { 
-                Console.WriteLine(string.Format("{0} tweeted: {1}", tweetArgs.Tweet.CreatedBy.ScreenName, tweetArgs.Tweet.Text));
+            filteredStream.AddTrack(TweetPublisher.Properties.Settings.Default.hashtag_filter);
+
+            filteredStream.MatchingTweetReceived += (sender, tweetArgs) => {
+                var tweet = tweetArgs.Tweet;
+
+                Console.WriteLine(string.Format("{0} tweeted: {1}", tweet.CreatedBy.ScreenName, tweet.Text));
                 Console.WriteLine(string.Empty);
-                SendEvent(tweetArgs.Tweet);
+                SendEvent(tweet);
             };
-            filteredStream.StartStreamMatchingAllConditions();
+            filteredStream.StartStreamMatchingAllConditions(); // blocking call that will prevent app from exiting
         }
 
         public static void SendEvent(Tweetinvi.Core.Interfaces.ITweet tweet)
         {
             // Create EventHubClient object
-            EventHubClient client = EventHubClient.Create(ConfigurationManager.AppSettings["eventHubName"]);
+            EventHubClient client = EventHubClient.Create(TweetPublisher.Properties.Settings.Default.eventHub_ConnectionString);
 
             //Random random = new Random();
             TweetEvent myEvent = new TweetEvent() { 
