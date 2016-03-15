@@ -2,8 +2,8 @@
 <SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="TweetPublisher.Properties" GeneratedClassName="Settings">
   <Profiles />
   <Settings>
-    <Setting Name="eventHubName" Type="System.String" Scope="User">
-      <Value Profile="(Default)">&lt;eventHubName&gt;</Value>
+    <Setting Name="eventHub_ConnectionString" Type="System.String" Scope="User">
+      <Value Profile="(Default)">&lt;eventHub_ConnectionString&gt;</Value>
     </Setting>
     <Setting Name="Access_Token" Type="System.String" Scope="User">
       <Value Profile="(Default)">&lt;Access_Token&gt;</Value>
@@ -19,6 +19,9 @@
     </Setting>
     <Setting Name="hashtag_filter" Type="System.String" Scope="User">
       <Value Profile="(Default)">&lt;hashtag_filter&gt;</Value>
+    </Setting>
+    <Setting Name="eventHub_hubname" Type="System.String" Scope="User">
+      <Value Profile="(Default)">&lt;eventHub_hubname&gt;</Value>
     </Setting>
   </Settings>
 </SettingsFile>

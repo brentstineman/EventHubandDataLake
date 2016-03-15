@@ -25,13 +25,13 @@ namespace TweetPublisher.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("<eventHubName>")]
-        public string eventHubName {
+        [global::System.Configuration.DefaultSettingValueAttribute("<eventHub_ConnectionString>")]
+        public string eventHub_ConnectionString {
             get {
-                return ((string)(this["eventHubName"]));
+                return ((string)(this["eventHub_ConnectionString"]));
             }
             set {
-                this["eventHubName"] = value;
+                this["eventHub_ConnectionString"] = value;
             }
         }
         
@@ -92,6 +92,18 @@ namespace TweetPublisher.Properties {
             }
             set {
                 this["hashtag_filter"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("<eventHub_hubname>")]
+        public string eventHub_hubname {
+            get {
+                return ((string)(this["eventHub_hubname"]));
+            }
+            set {
+                this["eventHub_hubname"] = value;
             }
         }
     }

@@ -38,7 +38,8 @@ namespace ConsoleApplication1
         public static void SendEvent(Tweetinvi.Core.Interfaces.ITweet tweet)
         {
             // Create EventHubClient object
-            EventHubClient client = EventHubClient.Create(TweetPublisher.Properties.Settings.Default.eventHub_ConnectionString);
+            EventHubClient client = EventHubClient.CreateFromConnectionString(TweetPublisher.Properties.Settings.Default.eventHub_ConnectionString, 
+                TweetPublisher.Properties.Settings.Default.eventHub_hubname);
 
             //Random random = new Random();
             TweetEvent myEvent = new TweetEvent() { 
