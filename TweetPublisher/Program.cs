@@ -1,8 +1,4 @@
-﻿using EventTypes;
-using Microsoft.ServiceBus;
-using Microsoft.ServiceBus.Messaging;
-using Newtonsoft.Json;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -11,8 +7,12 @@ using Tweetinvi;
 using Tweetinvi.Credentials;
 using System.Configuration;
 using Tweetinvi.Core.Credentials;
+using EventTypes;
+using Microsoft.ServiceBus;
+using Microsoft.ServiceBus.Messaging;
+using Newtonsoft.Json;
 
-namespace ConsoleApplication1
+namespace TweetPublisher
 {
     class Program
     {
@@ -38,15 +38,16 @@ namespace ConsoleApplication1
         public static void SendEvent(Tweetinvi.Core.Interfaces.ITweet tweet)
         {
             // Create EventHubClient object
-            EventHubClient client = EventHubClient.CreateFromConnectionString(TweetPublisher.Properties.Settings.Default.eventHub_ConnectionString, 
+            EventHubClient client = EventHubClient.CreateFromConnectionString(TweetPublisher.Properties.Settings.Default.eventHub_ConnectionString,
                 TweetPublisher.Properties.Settings.Default.eventHub_hubname);
 
             //Random random = new Random();
-            TweetEvent myEvent = new TweetEvent() { 
+            TweetEvent myEvent = new TweetEvent()
+            {
                 Author = tweet.CreatedBy.ScreenName,
-                Text = tweet.Text, 
+                Text = tweet.Text,
                 CreatedAt = tweet.CreatedAt
-             };
+            };
             var serializedString = JsonConvert.SerializeObject(myEvent);
             EventData data = new EventData(Encoding.Unicode.GetBytes(serializedString))
             {

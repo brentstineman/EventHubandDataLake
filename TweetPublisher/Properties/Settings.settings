@@ -2,26 +2,29 @@
 <SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="TweetPublisher.Properties" GeneratedClassName="Settings">
   <Profiles />
   <Settings>
-    <Setting Name="eventHub_ConnectionString" Type="System.String" Scope="User">
+    <Setting Name="Setting" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">fff</Value>
+    </Setting>
+    <Setting Name="eventHub_ConnectionString" Type="System.String" Scope="Application">
       <Value Profile="(Default)">&lt;eventHub_ConnectionString&gt;</Value>
     </Setting>
-    <Setting Name="Access_Token" Type="System.String" Scope="User">
+    <Setting Name="eventHub_hubname" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">&lt;eventHub_hubname&gt;</Value>
+    </Setting>
+    <Setting Name="Access_Token" Type="System.String" Scope="Application">
       <Value Profile="(Default)">&lt;Access_Token&gt;</Value>
     </Setting>
-    <Setting Name="Access_Token_Secret" Type="System.String" Scope="User">
+    <Setting Name="Access_Token_Secret" Type="System.String" Scope="Application">
       <Value Profile="(Default)">&lt;Access_Token_Secret&gt;</Value>
     </Setting>
-    <Setting Name="Consumer_Key" Type="System.String" Scope="User">
+    <Setting Name="Consumer_Key" Type="System.String" Scope="Application">
       <Value Profile="(Default)">&lt;Consumer_Key&gt;</Value>
     </Setting>
-    <Setting Name="Consumer_Secret" Type="System.String" Scope="User">
+    <Setting Name="Consumer_Secret" Type="System.String" Scope="Application">
       <Value Profile="(Default)">&lt;Consumer_Secret&gt;</Value>
     </Setting>
-    <Setting Name="hashtag_filter" Type="System.String" Scope="User">
+    <Setting Name="hashtag_filter" Type="System.String" Scope="Application">
       <Value Profile="(Default)">&lt;hashtag_filter&gt;</Value>
-    </Setting>
-    <Setting Name="eventHub_hubname" Type="System.String" Scope="User">
-      <Value Profile="(Default)">&lt;eventHub_hubname&gt;</Value>
     </Setting>
   </Settings>
 </SettingsFile>
