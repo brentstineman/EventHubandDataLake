@@ -1,4 +1,5 @@
-﻿using Microsoft.ServiceBus;
+﻿
+using Microsoft.ServiceBus;
 using Microsoft.ServiceBus.Messaging;
 using System;
 using System.Collections.Generic;
@@ -44,5 +45,6 @@ namespace EventProcessor
                 await Task.Delay(1000, cancellationToken);
             }
         }
+
     }
 }

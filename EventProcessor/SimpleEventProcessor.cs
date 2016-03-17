@@ -1,15 +1,17 @@
-﻿    using System.Diagnostics;
-    using System.Runtime.Serialization.Json;
-    using System.Threading;
-    using System;
-    using System.Collections.Generic;
-    using System.IO;
-    using System.Linq;
-    using System.Text;
-    using System.Threading.Tasks;
-    using Microsoft.ServiceBus.Messaging;
-    using Newtonsoft.Json;
-    using EventTypes;
+﻿using System.Diagnostics;
+using System.Runtime.Serialization.Json;
+using System.Threading;
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using Microsoft.ServiceBus.Messaging;
+using Newtonsoft.Json;
+using EventTypes;
+using Microsoft.IdentityModel.Clients.ActiveDirectory;
+using Microsoft.Rest;
 
 namespace EventProcessor
 {
@@ -19,6 +21,8 @@ namespace EventProcessor
         PartitionContext partitionContext;
         Stopwatch checkpointStopWatch;
 
+        TokenCredentials myADTokenCredentials;
+
         public SimpleEventProcessor()
         {
             this.map = new Dictionary<string, int>();
@@ -27,6 +31,14 @@ namespace EventProcessor
         public Task OpenAsync(PartitionContext context)
         {
             Console.WriteLine(string.Format("SimpleEventProcessor initialize.  Partition: '{0}', Offset: '{1}'", context.Lease.PartitionId, context.Lease.Offset));
+
+            // calling ansyc method 
+            Task<TokenCredentials> t = AuthenticateApplication(EventProcessor.Properties.Settings.Default.aad_tenantId,
+                EventProcessor.Properties.Settings.Default.aad_resource, EventProcessor.Properties.Settings.Default.aad_appClientId,
+                EventProcessor.Properties.Settings.Default.aad_clientSecret);
+            t.Wait();
+            myADTokenCredentials = t.Result;
+
             this.partitionContext = context;
             this.checkpointStopWatch = new Stopwatch();
             this.checkpointStopWatch.Start();
@@ -89,5 +101,17 @@ namespace EventProcessor
             }
         }
 
+        #region Data Lake Methods
+        async public static Task<TokenCredentials> AuthenticateApplication(string tenantId, string resource, string appClientId, string clientSecret)
+        {
+            var authContext = new AuthenticationContext("https://login.microsoftonline.com/" + tenantId);
+            var credential = new ClientCredential(appClientId, clientSecret);
+
+            var tokenAuthResult = await authContext.AcquireTokenAsync(resource, credential);
+
+            return new TokenCredentials(tokenAuthResult.AccessToken);
+        }
+
+        #endregion
     }
 }

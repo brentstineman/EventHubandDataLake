@@ -14,5 +14,17 @@
     <Setting Name="storageConnectionString" Type="System.String" Scope="Application">
       <Value Profile="(Default)">&lt;storageConnectionString&gt;</Value>
     </Setting>
+    <Setting Name="aad_tenantId" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">&lt;aad_tenantId&gt;</Value>
+    </Setting>
+    <Setting Name="aad_resource" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">&lt;aad_resource&gt;</Value>
+    </Setting>
+    <Setting Name="aad_appClientId" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">&lt;aad_appClientId&gt;</Value>
+    </Setting>
+    <Setting Name="aad_clientSecret" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">&lt;aad_clientSecret&gt;</Value>
+    </Setting>
   </Settings>
 </SettingsFile>

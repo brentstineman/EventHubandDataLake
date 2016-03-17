@@ -58,5 +58,41 @@ namespace EventProcessor.Properties {
                 return ((string)(this["storageConnectionString"]));
             }
         }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("<aad_tenantId>")]
+        public string aad_tenantId {
+            get {
+                return ((string)(this["aad_tenantId"]));
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("<aad_resource>")]
+        public string aad_resource {
+            get {
+                return ((string)(this["aad_resource"]));
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("<aad_appClientId>")]
+        public string aad_appClientId {
+            get {
+                return ((string)(this["aad_appClientId"]));
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("<aad_clientSecret>")]
+        public string aad_clientSecret {
+            get {
+                return ((string)(this["aad_clientSecret"]));
+            }
+        }
     }
 }
