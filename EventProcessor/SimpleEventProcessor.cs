@@ -12,6 +12,8 @@ using Newtonsoft.Json;
 using EventTypes;
 using Microsoft.IdentityModel.Clients.ActiveDirectory;
 using Microsoft.Rest;
+using Microsoft.Azure.Management.DataLake.Store;
+using Microsoft.Azure.Management.DataLake.Store.Models;
 
 namespace EventProcessor
 {
@@ -22,6 +24,8 @@ namespace EventProcessor
         Stopwatch checkpointStopWatch;
 
         TokenCredentials myADTokenCredentials;
+        DataLakeStoreFileSystemManagementClient myadlFileSystemClient;
+        string dlFileName;
 
         public SimpleEventProcessor()
         {
@@ -32,12 +36,34 @@ namespace EventProcessor
         {
             Console.WriteLine(string.Format("SimpleEventProcessor initialize.  Partition: '{0}', Offset: '{1}'", context.Lease.PartitionId, context.Lease.Offset));
 
-            // calling ansyc method 
+            // set up our target file name
+            dlFileName = string.Format("/{0}/{1}", EventProcessor.Properties.Settings.Default.adl_directory, EventProcessor.Properties.Settings.Default.adl_fileName);
+
+            // get security token for Azure Data Lake
             Task<TokenCredentials> t = AuthenticateApplication(EventProcessor.Properties.Settings.Default.aad_tenantId,
                 EventProcessor.Properties.Settings.Default.aad_resource, EventProcessor.Properties.Settings.Default.aad_appClientId,
                 EventProcessor.Properties.Settings.Default.aad_clientSecret);
             t.Wait();
             myADTokenCredentials = t.Result;
+
+            //create Azure Data Lake Client using the token
+            myadlFileSystemClient = new DataLakeStoreFileSystemManagementClient(myADTokenCredentials);
+            myadlFileSystemClient.SubscriptionId = EventProcessor.Properties.Settings.Default.adl_subscriptionID;
+
+            // create the directory in the Data Lake Store
+            myadlFileSystemClient.FileSystem.Mkdirs(EventProcessor.Properties.Settings.Default.adl_destFolder, EventProcessor.Properties.Settings.Default.adl_accountName);
+
+            // create a file in the Data Lake Store (if it already exists, an exception is thrown, ignore that one)
+            try
+            {
+                myadlFileSystemClient.FileSystem.Create(dlFileName, EventProcessor.Properties.Settings.Default.adl_accountName, new MemoryStream(), false);
+            }
+            catch (Microsoft.Rest.Azure.CloudException exp)
+            {
+                // if file already exists, ignore and continue. Otherwise re-throw exception
+                if (!exp.Response.Content.Contains("FileAlreadyExistsException"))
+                    throw exp; // rethrow exception
+            }
 
             this.partitionContext = context;
             this.checkpointStopWatch = new Stopwatch();
@@ -49,8 +75,15 @@ namespace EventProcessor
         {
             try
             {
+                var memoryStream = new MemoryStream();
+                var streamWriter = new StreamWriter(memoryStream);
+
                 foreach (EventData eventData in events)
                 {
+                    // capture the event's data to the stream so we can write it to the Data Lake Store
+                    streamWriter.WriteLine(Encoding.Unicode.GetString(eventData.GetBytes()));
+
+                    // output the event to the console                    
                     if (eventData.Properties["Type"].ToString().Equals("TweetEvent"))
                     {
                         TweetEvent tweet = JsonConvert.DeserializeObject<TweetEvent>(Encoding.Unicode.GetString(eventData.GetBytes()));
@@ -76,6 +109,16 @@ namespace EventProcessor
                     }
                 }
 
+                // save the events to Data Lake
+                streamWriter.Flush();
+                if (memoryStream.Length > 0)
+                {
+                    memoryStream.Seek(0, SeekOrigin.Begin);
+                    myadlFileSystemClient.FileSystem.ConcurrentAppend(dlFileName, memoryStream, EventProcessor.Properties.Settings.Default.adl_accountName, AppendModeType.Autocreate);
+                }
+                memoryStream.Dispose();
+                streamWriter.Dispose();
+
                 //Call checkpoint every n minutes, so that worker can resume processing from that point if restarted
                 if (this.checkpointStopWatch.Elapsed.Ticks > TimeSpan.FromMinutes(1).Ticks)
                 {
@@ -95,6 +138,10 @@ namespace EventProcessor
         public async Task CloseAsync(PartitionContext context, CloseReason reason)
         {
             Console.WriteLine(string.Format("Processor Shuting Down.  Partition '{0}', Reason: '{1}'.", this.partitionContext.Lease.PartitionId, reason.ToString()));
+
+            // dispose of our Data Lake Store client
+            myadlFileSystemClient.Dispose();
+
             if (reason == CloseReason.Shutdown)
             {
                 await context.CheckpointAsync();
@@ -104,10 +151,9 @@ namespace EventProcessor
         #region Data Lake Methods
         async public static Task<TokenCredentials> AuthenticateApplication(string tenantId, string resource, string appClientId, string clientSecret)
         {
-            var authContext = new AuthenticationContext("https://login.microsoftonline.com/" + tenantId);
-            var credential = new ClientCredential(appClientId, clientSecret);
-
-            var tokenAuthResult = await authContext.AcquireTokenAsync(resource, credential);
+            var authenticationContext = new AuthenticationContext("https://login.windows.net/" + tenantId);
+            var credential = new ClientCredential(clientId: appClientId, clientSecret: clientSecret);
+            var tokenAuthResult = await authenticationContext.AcquireTokenAsync(resource: "https://management.core.windows.net/", clientCredential: credential);
 
             return new TokenCredentials(tokenAuthResult.AccessToken);
         }
