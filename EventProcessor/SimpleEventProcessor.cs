@@ -27,42 +27,51 @@ namespace EventProcessor
         DataLakeStoreFileSystemManagementClient myadlFileSystemClient;
         string dlFileName;
 
+        bool fsDataLakeEnabled = false;
+
         public SimpleEventProcessor()
         {
             this.map = new Dictionary<string, int>();
+
+            // set feature switch for Azure Data Lake output
+            // disable if the folder setting starts with "<" (aka is at the default)
+            fsDataLakeEnabled = !EventProcessor.Properties.Settings.Default.adl_destFolder.StartsWith("<");
         }
 
         public Task OpenAsync(PartitionContext context)
         {
             Console.WriteLine(string.Format("SimpleEventProcessor initialize.  Partition: '{0}', Offset: '{1}'", context.Lease.PartitionId, context.Lease.Offset));
 
-            // set up our target file name
-            dlFileName = string.Format("/{0}/{1}", EventProcessor.Properties.Settings.Default.adl_destFolder, EventProcessor.Properties.Settings.Default.adl_fileName);
-
-            // get security token for Azure Data Lake
-            Task<TokenCredentials> t = AuthenticateApplication(EventProcessor.Properties.Settings.Default.aad_tenantId,
-                EventProcessor.Properties.Settings.Default.aad_resource, EventProcessor.Properties.Settings.Default.aad_appClientId,
-                EventProcessor.Properties.Settings.Default.aad_clientSecret);
-            t.Wait();
-            myADTokenCredentials = t.Result;
-
-            //create Azure Data Lake Client using the token
-            myadlFileSystemClient = new DataLakeStoreFileSystemManagementClient(myADTokenCredentials);
-            myadlFileSystemClient.SubscriptionId = EventProcessor.Properties.Settings.Default.adl_subscriptionID;
-
-            // create the directory in the Data Lake Store
-            myadlFileSystemClient.FileSystem.Mkdirs(EventProcessor.Properties.Settings.Default.adl_destFolder, EventProcessor.Properties.Settings.Default.adl_accountName);
-
-            // create a file in the Data Lake Store (if it already exists, an exception is thrown, ignore that one)
-            try
+            if (fsDataLakeEnabled) // if we're doing data lake output
             {
-                myadlFileSystemClient.FileSystem.Create(dlFileName, EventProcessor.Properties.Settings.Default.adl_accountName, new MemoryStream(), true);
-            }
-            catch (Microsoft.Rest.Azure.CloudException exp)
-            {
-                // if file already exists, ignore and continue. Otherwise re-throw exception
-                if (!exp.Response.Content.Contains("FileAlreadyExistsException"))
-                    throw exp; // rethrow exception
+                // set up our target file name
+                dlFileName = string.Format("/{0}/{1}", EventProcessor.Properties.Settings.Default.adl_destFolder, EventProcessor.Properties.Settings.Default.adl_fileName);
+
+                // get security token for Azure Data Lake
+                Task<TokenCredentials> t = AuthenticateApplication(EventProcessor.Properties.Settings.Default.aad_tenantId,
+                    EventProcessor.Properties.Settings.Default.aad_resource, EventProcessor.Properties.Settings.Default.aad_appClientId,
+                    EventProcessor.Properties.Settings.Default.aad_clientSecret);
+                t.Wait();
+                myADTokenCredentials = t.Result;
+
+                //create Azure Data Lake Client using the token
+                myadlFileSystemClient = new DataLakeStoreFileSystemManagementClient(myADTokenCredentials);
+                myadlFileSystemClient.SubscriptionId = EventProcessor.Properties.Settings.Default.adl_subscriptionID;
+
+                // create the directory in the Data Lake Store
+                myadlFileSystemClient.FileSystem.Mkdirs(EventProcessor.Properties.Settings.Default.adl_destFolder, EventProcessor.Properties.Settings.Default.adl_accountName);
+
+                // create a file in the Data Lake Store (if it already exists, an exception is thrown, ignore that one)
+                try
+                {
+                    myadlFileSystemClient.FileSystem.Create(dlFileName, EventProcessor.Properties.Settings.Default.adl_accountName, new MemoryStream(), true);
+                }
+                catch (Microsoft.Rest.Azure.CloudException exp)
+                {
+                    // if file already exists, ignore and continue. Otherwise re-throw exception
+                    if (!exp.Response.Content.Contains("FileAlreadyExistsException"))
+                        throw exp; // rethrow exception
+                }
             }
 
             this.partitionContext = context;
@@ -109,13 +118,17 @@ namespace EventProcessor
                     }
                 }
 
-                // save the events to Data Lake
-                streamWriter.Flush();
-                if (memoryStream.Length > 0)
+                if (fsDataLakeEnabled) // if we're doing data lake output
                 {
-                    memoryStream.Seek(0, SeekOrigin.Begin);
-                    myadlFileSystemClient.FileSystem.ConcurrentAppend(dlFileName, memoryStream, EventProcessor.Properties.Settings.Default.adl_accountName, AppendModeType.Autocreate);
+                    // save the events to Data Lake
+                    streamWriter.Flush();
+                    if (memoryStream.Length > 0)
+                    {
+                        memoryStream.Seek(0, SeekOrigin.Begin);
+                        myadlFileSystemClient.FileSystem.ConcurrentAppend(dlFileName, memoryStream, EventProcessor.Properties.Settings.Default.adl_accountName, AppendModeType.Autocreate);
+                    }
                 }
+
                 memoryStream.Dispose();
                 streamWriter.Dispose();
 
@@ -139,8 +152,11 @@ namespace EventProcessor
         {
             Console.WriteLine(string.Format("Processor Shuting Down.  Partition '{0}', Reason: '{1}'.", this.partitionContext.Lease.PartitionId, reason.ToString()));
 
-            // dispose of our Data Lake Store client
-            myadlFileSystemClient.Dispose();
+            if (fsDataLakeEnabled) // if we're doing data lake output
+            {
+                // dispose of our Data Lake Store client
+                myadlFileSystemClient.Dispose();
+            }
 
             if (reason == CloseReason.Shutdown)
             {
