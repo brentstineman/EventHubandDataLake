@@ -124,15 +124,6 @@ namespace EventProcessor.Properties {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("<adl_directory>")]
-        public string adl_directory {
-            get {
-                return ((string)(this["adl_directory"]));
-            }
-        }
-        
-        [global::System.Configuration.ApplicationScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("<adl_fileName>")]
         public string adl_fileName {
             get {

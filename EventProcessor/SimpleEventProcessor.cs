@@ -37,7 +37,7 @@ namespace EventProcessor
             Console.WriteLine(string.Format("SimpleEventProcessor initialize.  Partition: '{0}', Offset: '{1}'", context.Lease.PartitionId, context.Lease.Offset));
 
             // set up our target file name
-            dlFileName = string.Format("/{0}/{1}", EventProcessor.Properties.Settings.Default.adl_directory, EventProcessor.Properties.Settings.Default.adl_fileName);
+            dlFileName = string.Format("/{0}/{1}", EventProcessor.Properties.Settings.Default.adl_destFolder, EventProcessor.Properties.Settings.Default.adl_fileName);
 
             // get security token for Azure Data Lake
             Task<TokenCredentials> t = AuthenticateApplication(EventProcessor.Properties.Settings.Default.aad_tenantId,
@@ -56,7 +56,7 @@ namespace EventProcessor
             // create a file in the Data Lake Store (if it already exists, an exception is thrown, ignore that one)
             try
             {
-                myadlFileSystemClient.FileSystem.Create(dlFileName, EventProcessor.Properties.Settings.Default.adl_accountName, new MemoryStream(), false);
+                myadlFileSystemClient.FileSystem.Create(dlFileName, EventProcessor.Properties.Settings.Default.adl_accountName, new MemoryStream(), true);
             }
             catch (Microsoft.Rest.Azure.CloudException exp)
             {

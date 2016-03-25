@@ -35,9 +35,6 @@
     <Setting Name="adl_destFolder" Type="System.String" Scope="Application">
       <Value Profile="(Default)">&lt;adl_destFolder&gt;</Value>
     </Setting>
-    <Setting Name="adl_directory" Type="System.String" Scope="Application">
-      <Value Profile="(Default)">&lt;adl_directory&gt;</Value>
-    </Setting>
     <Setting Name="adl_fileName" Type="System.String" Scope="Application">
       <Value Profile="(Default)">&lt;adl_fileName&gt;</Value>
     </Setting>
