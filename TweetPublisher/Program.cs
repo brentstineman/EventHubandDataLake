@@ -6,7 +6,6 @@ using System.Threading.Tasks;
 using Tweetinvi;
 using Tweetinvi.Credentials;
 using System.Configuration;
-using Tweetinvi.Core.Credentials;
 using EventTypes;
 using Microsoft.ServiceBus;
 using Microsoft.ServiceBus.Messaging;

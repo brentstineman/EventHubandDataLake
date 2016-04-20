@@ -106,15 +106,6 @@ namespace EventProcessor.Properties {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("<adl_subscriptionID>")]
-        public string adl_subscriptionID {
-            get {
-                return ((string)(this["adl_subscriptionID"]));
-            }
-        }
-        
-        [global::System.Configuration.ApplicationScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("<adl_destFolder>")]
         public string adl_destFolder {
             get {

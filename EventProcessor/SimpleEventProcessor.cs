@@ -56,7 +56,6 @@ namespace EventProcessor
 
                 //create Azure Data Lake Client using the token
                 myadlFileSystemClient = new DataLakeStoreFileSystemManagementClient(myADTokenCredentials);
-                myadlFileSystemClient.SubscriptionId = EventProcessor.Properties.Settings.Default.adl_subscriptionID;
 
                 // create the directory in the Data Lake Store
                 myadlFileSystemClient.FileSystem.Mkdirs(EventProcessor.Properties.Settings.Default.adl_destFolder, EventProcessor.Properties.Settings.Default.adl_accountName);
@@ -125,7 +124,7 @@ namespace EventProcessor
                     if (memoryStream.Length > 0)
                     {
                         memoryStream.Seek(0, SeekOrigin.Begin);
-                        myadlFileSystemClient.FileSystem.ConcurrentAppend(dlFileName, memoryStream, EventProcessor.Properties.Settings.Default.adl_accountName, AppendModeType.Autocreate);
+                        myadlFileSystemClient.FileSystem.ConcurrentAppend(EventProcessor.Properties.Settings.Default.adl_accountName, dlFileName, memoryStream, AppendModeType.Autocreate);
                     }
                 }
 

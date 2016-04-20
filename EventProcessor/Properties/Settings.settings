@@ -29,9 +29,6 @@
     <Setting Name="adl_accountName" Type="System.String" Scope="Application">
       <Value Profile="(Default)">&lt;adl_accountName&gt;</Value>
     </Setting>
-    <Setting Name="adl_subscriptionID" Type="System.String" Scope="Application">
-      <Value Profile="(Default)">&lt;adl_subscriptionID&gt;</Value>
-    </Setting>
     <Setting Name="adl_destFolder" Type="System.String" Scope="Application">
       <Value Profile="(Default)">&lt;adl_destFolder&gt;</Value>
     </Setting>
