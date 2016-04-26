@@ -28,8 +28,6 @@ namespace AttendeeSimulator_Dev
 
         static void Main(string[] args)
         {
-            // database where we can get our sample attendee names
-            string connstring = ConfigurationManager.AppSettings["NameDatabase"];
             // set a starting time for the conference
             DateTime virtualClock;
             DateTime.TryParseExact("2014/08/10:0750", "yyyy/MM/dd:HHmm", null,
@@ -72,8 +70,7 @@ namespace AttendeeSimulator_Dev
             // generate attendee list
             // I used a copy of the Contoso2013 database to get attendee names
             //********************
-            string sdwConnectionString = connstring;
-            SqlConnection sdwDBConnection = new SqlConnection(sdwConnectionString);
+            SqlConnection sdwDBConnection = new SqlConnection(AttendeeSimulator_Dev.Properties.Settings.Default.SQLConnectionString);
             sdwDBConnection.Open();
             SqlCommand queryCommand = new SqlCommand("select top("+attendeeCnt+") FirstName,LastName,BusinessEntityID FROM Person.Person ORDER BY BusinessEntityID", sdwDBConnection);
             SqlDataReader reader = queryCommand.ExecuteReader();

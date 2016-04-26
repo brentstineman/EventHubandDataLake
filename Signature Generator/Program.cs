@@ -14,10 +14,10 @@ namespace Signature_Generator
         {
             CultureInfo enUS = new CultureInfo("en-US");
 
-            Console.WriteLine("What is your service bus namespace (do not include the 'servicebus.windows.net' part?");
+            Console.WriteLine("What is your service bus namespace? (do not include the 'servicebus.windows.net' part)");
             string sbNamespace = Console.ReadLine().Trim();
 
-            Console.WriteLine("What is the path? universalapp");
+            Console.WriteLine("What is the path within the namespace you want to secure?");
             string sbPath = Console.ReadLine().Trim();
 
             Console.WriteLine("What is the name of the signing policy?");
